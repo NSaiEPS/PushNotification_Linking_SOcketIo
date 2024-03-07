@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "582776473586",
+    "project_id": "pushnotification-linking-ioetc",
+    "storage_bucket": "pushnotification-linking-ioetc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582776473586:android:852303ad22d9274986cd6b",
+        "android_client_info": {
+          "package_name": "com.pushnotificationlinkingsocket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu-ytJ0hQPXMg4HF07ziVNXDPnoindTWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
