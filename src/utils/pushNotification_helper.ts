@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-
+import {Alert} from 'react-native';
+import PushNotification from 'react-native-push-notification';
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -28,6 +29,8 @@ let GetFcmToken = async () => {
 
 export const notificationListener = async () => {
   messaging().onNotificationOpenedApp(remoteMessage => {
+    Alert.alert('Notification caused app to open from background state:');
+
     console.log(
       'Notification caused app to open from background state:',
       remoteMessage.notification,
@@ -36,16 +39,29 @@ export const notificationListener = async () => {
 
   messaging().onMessage(async remoteMessage => {
     console.log('Received in forground', remoteMessage);
+    Alert.alert(remoteMessage?.notification?.body);
+    PushNotification.localNotification({
+      message: remoteMessage?.notification.body,
+      title: remoteMessage?.notification.title,
+      bigPictureUrl: remoteMessage?.notification.android.imageUrl,
+      smallIcon: remoteMessage?.notification.android.imageUrl,
+    });
   });
 
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {
       if (remoteMessage) {
+        Alert.alert('Notification caused app to open from quit state:');
+
         console.log(
           'Notification caused app to open from quit state:',
           remoteMessage.notification,
         );
       }
     });
+
+  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
 };
