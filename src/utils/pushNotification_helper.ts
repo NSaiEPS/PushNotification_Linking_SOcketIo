@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {Alert} from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import NavigationService from '../Navigation/NavigationService';
+
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -29,7 +31,22 @@ let GetFcmToken = async () => {
 
 export const notificationListener = async () => {
   messaging().onNotificationOpenedApp(remoteMessage => {
-    Alert.alert('Notification caused app to open from background state:');
+    // Alert.alert(
+    //   'Notification caused app to open from background state:',
+    //   'My Alert Msg',
+    //   [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {
+    //       text: 'OK',
+    //       onPress: () => NavigationService.navigate(NAVIGATION_AUTH_STACK),
+    //     },
+    //   ],
+    // );
+    NavigationService.navigate(BACKGROUND_STATE_SCREEN);
 
     console.log(
       'Notification caused app to open from background state:',
@@ -39,7 +56,21 @@ export const notificationListener = async () => {
 
   messaging().onMessage(async remoteMessage => {
     console.log('Received in forground', remoteMessage);
-    Alert.alert(remoteMessage?.notification?.body);
+    // Alert.alert(remoteMessage?.notification?.body);
+    Alert.alert(remoteMessage?.notification?.body, 'My Alert Msg', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => NavigationService.navigate(FOREGROUND_STATE_SCREEN),
+      },
+    ]);
+
+    // NavigationService.navigate(NAVIGATION_AUTH_LOADING_STACK);
+
     PushNotification.localNotification({
       message: remoteMessage?.notification.body,
       title: remoteMessage?.notification.title,
@@ -52,7 +83,23 @@ export const notificationListener = async () => {
     .getInitialNotification()
     .then(remoteMessage => {
       if (remoteMessage) {
-        Alert.alert('Notification caused app to open from quit state:');
+        // If
+        // Alert.alert('Notification caused app to open from quit state:',);
+        Alert.alert(
+          'Notification caused app to open from quit statesssss:',
+          'My Alert Msg',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () => NavigationService.navigate(QUIT_STATE_SCREEN),
+            },
+          ],
+        );
 
         console.log(
           'Notification caused app to open from quit state:',
@@ -65,45 +112,3 @@ export const notificationListener = async () => {
   //     console.log('Message handled in the background!', remoteMessage);
   //   });
 };
-
-// Import necessary modules
-import {useEffect} from 'react';
-import {Platform} from 'react-native';
-
-// Function to handle background notifications
-const handleBackgroundNotification = async () => {
-  // Logic to open the app automatically
-  // This might involve navigating to a specific screen or performing an action
-  Alert.alert('Notification caused app to open from background state:');
-};
-
-// Component to handle push notifications
-const PushNotificationHandler = () => {
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // Handle background notification when the app is not in the foreground
-      if (remoteMessage.notification && Platform.OS === 'android') {
-        handleBackgroundNotification();
-      }
-    });
-
-    // Unsubscribe from message listener when component unmounts
-    return unsubscribe;
-  }, []);
-
-  // Check for initial notification when the app is opened from a closed state
-  useEffect(() => {
-    const checkInitialNotification = async () => {
-      const initialNotification = await messaging().getInitialNotification();
-      if (initialNotification && Platform.OS === 'android') {
-        handleBackgroundNotification();
-      }
-    };
-
-    checkInitialNotification();
-  }, []);
-
-  return null; // No UI component needed for this handler
-};
-
-export default PushNotificationHandler;

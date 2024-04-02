@@ -36,15 +36,7 @@ function App(): React.JSX.Element {
       SplashScreen.hide();
     }, 2000);
   }, []);
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Navigationcontainers />
-    </SafeAreaView>
-  );
+  return <Navigationcontainers />;
 }
 
 const styles = StyleSheet.create({
