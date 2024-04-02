@@ -1,8 +1,11 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
-import {Alert} from 'react-native';
-import PushNotification from 'react-native-push-notification';
+
 import NavigationService from '../Navigation/NavigationService';
+import {
+  BACKGROUND_STATE_SCREEN,
+  NAVIGATION_AUTH_LOADING_STACK,
+} from '../Navigation/routes';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
@@ -13,6 +16,7 @@ export const requestUserPermission = async () => {
   if (enabled) {
     console.log('Authorization status:', authStatus);
     GetFcmToken();
+    notificationListener(); // Start listening for notifications
   }
 };
 
@@ -30,85 +34,23 @@ let GetFcmToken = async () => {
 };
 
 export const notificationListener = async () => {
-  messaging().onNotificationOpenedApp(remoteMessage => {
-    // Alert.alert(
-    //   'Notification caused app to open from background state:',
-    //   'My Alert Msg',
-    //   [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {
-    //       text: 'OK',
-    //       onPress: () => NavigationService.navigate(NAVIGATION_AUTH_STACK),
-    //     },
-    //   ],
-    // );
-    NavigationService.navigate(BACKGROUND_STATE_SCREEN);
-
-    console.log(
-      'Notification caused app to open from background state:',
-      remoteMessage.notification,
-    );
+  // Listen for notification when app is in background or terminated
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Message handled in the background!', remoteMessage);
+    handleNotification(remoteMessage.data);
   });
 
+  // Listen for notification when app is in foreground
   messaging().onMessage(async remoteMessage => {
-    console.log('Received in forground', remoteMessage);
-    // Alert.alert(remoteMessage?.notification?.body);
-    Alert.alert(remoteMessage?.notification?.body, 'My Alert Msg', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'OK',
-        onPress: () => NavigationService.navigate(FOREGROUND_STATE_SCREEN),
-      },
-    ]);
-
-    // NavigationService.navigate(NAVIGATION_AUTH_LOADING_STACK);
-
-    PushNotification.localNotification({
-      message: remoteMessage?.notification.body,
-      title: remoteMessage?.notification.title,
-      bigPictureUrl: remoteMessage?.notification.android.imageUrl,
-      smallIcon: remoteMessage?.notification.android.imageUrl,
-    });
+    console.log('Received in foreground', remoteMessage);
+    handleNotification(remoteMessage.data);
   });
+};
 
-  messaging()
-    .getInitialNotification()
-    .then(remoteMessage => {
-      if (remoteMessage) {
-        // If
-        // Alert.alert('Notification caused app to open from quit state:',);
-        Alert.alert(
-          'Notification caused app to open from quit statesssss:',
-          'My Alert Msg',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {
-              text: 'OK',
-              onPress: () => NavigationService.navigate(QUIT_STATE_SCREEN),
-            },
-          ],
-        );
-
-        console.log(
-          'Notification caused app to open from quit state:',
-          remoteMessage.notification,
-        );
-      }
-    });
-
-  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //     console.log('Message handled in the background!', remoteMessage);
-  //   });
+const handleNotification = data => {
+  // Handle the notification data here
+  // For example, navigate to a specific screen
+  console.log('Received notification data:', data);
+  NavigationService.navigate(NAVIGATION_AUTH_LOADING_STACK);
+  console.log('Navigated to', NAVIGATION_AUTH_LOADING_STACK);
 };
