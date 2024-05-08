@@ -37,6 +37,8 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
+// import com.reactnativepipandroid.PipAndroidModule;
+
 
 public class MainActivity extends ReactActivity {
 
@@ -48,6 +50,11 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "pushnotificationlinkingsocket";
   }
+
+  // @Override
+  // public void onPictureInPictureModeChanged (boolean isInPictureInPictureMode, Configuration newConfig) {
+  //   PipAndroidModule.pipModeChanged(isInPictureInPictureMode);
+  // }
 
 
      @Override

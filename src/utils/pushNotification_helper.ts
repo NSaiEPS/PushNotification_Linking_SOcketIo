@@ -6,6 +6,8 @@ import {
   NAVIGATION_AUTH_LOADING_STACK,
 } from '../Navigation/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {NativeModules} from 'react-native';
+const {FloatingView} = NativeModules;
 
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
@@ -38,11 +40,14 @@ export const notificationListener = async () => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     console.log('Message handled in the background!', remoteMessage);
     handleNotification(remoteMessage.data);
+    FloatingView.showFloatingView();
   });
 
   // Listen for notification when app is in foreground
   messaging().onMessage(async remoteMessage => {
     console.log('Received in foreground', remoteMessage);
+    FloatingView.showFloatingView();
+
     handleNotification(remoteMessage.data);
   });
 };

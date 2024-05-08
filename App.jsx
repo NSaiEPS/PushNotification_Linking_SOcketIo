@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -21,6 +21,9 @@ import {
   requestUserPermission,
 } from './src/utils/pushNotification_helper';
 import Navigationcontainers from './src/Navigation/NavigationContainer';
+import DisplayOverOtherApps from './src/DisplayOverOtherApps';
+import Splashscreen from './src/AnimatedSplash';
+// import PipMode from './src/PipMode';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -36,7 +39,16 @@ function App(): React.JSX.Element {
       SplashScreen.hide();
     }, 2000);
   }, []);
-  return <Navigationcontainers />;
+  // return <Navigationcontainers />;
+  const [show, notShow] = useState(true);
+  return (
+    <>
+      {show && <Splashscreen notShow={notShow} />}
+
+      <DisplayOverOtherApps />
+    </>
+  );
+  // return <PipMode />;
 }
 
 const styles = StyleSheet.create({

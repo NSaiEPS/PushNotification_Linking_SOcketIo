@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import NavigationService from '../Navigation/NavigationService';
 import {NAVIGATION_AUTH_STACK} from '../Navigation/routes';
+import Overlay from 'react-native-overlay';
 
 const Authloading = () => {
   const handleNavigate = () => {
@@ -21,16 +22,24 @@ const Authloading = () => {
         }}>
         Authloading
       </Text>
-      <TouchableOpacity onPress={handleNavigate}>
-        <Text
-          style={{
-            color: 'red',
-            textAlign: 'center',
-            justifyContent: 'center',
-          }}>
-          Move to Auth Stack
-        </Text>
-      </TouchableOpacity>
+
+      <Overlay
+        // isVisible={true}
+        style={{
+          backgroundColor: 'blue',
+        }}>
+        <TouchableOpacity onPress={handleNavigate}>
+          <Text
+            style={{
+              color: 'red',
+              textAlign: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'white',
+            }}>
+            Move to Auth Stack
+          </Text>
+        </TouchableOpacity>
+      </Overlay>
     </View>
   );
 };
