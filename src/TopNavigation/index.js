@@ -1,14 +1,23 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import HomeTab from './HomeTab';
+import SettingsTab from './SettingsTab';
 
-const index = () => {
+const TopNavigation = () => {
+  const Tab = createMaterialTopTabNavigator();
+
   return (
-    <View>
-      <Text>index</Text>
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeTab} />
+        <Tab.Screen name="Settings" component={SettingsTab} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };
 
-export default index;
+export default TopNavigation;
 
 const styles = StyleSheet.create({});
